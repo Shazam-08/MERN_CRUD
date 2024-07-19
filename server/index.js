@@ -19,7 +19,7 @@ app.get("/getuser/:id", (req, res) => {
     .catch((err) => res.json(err));
 });
 
-app.put("/update", (req, res) => {
+app.put("/update/:id", (req, res) => {
   const id = req.params.id;
   userModel
     .findByIdAndUpdate(
