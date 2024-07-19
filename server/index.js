@@ -10,6 +10,26 @@ const userModel = require("./models/Users");
 dotenv.config();
 
 mongoose.connect(process.env.MONGO_URI);
+
+app.get("/getuser/:id", (req, res) => {
+  const id = req.params.id;
+  userModel
+    .findById({ _id: id })
+    .then((result) => res.json(result))
+    .catch((err) => res.json(err));
+});
+
+app.put("/update", (req, res) => {
+  const id = req.params.id;
+  userModel
+    .findByIdAndUpdate(
+      { _id: id },
+      { name: req.body.name, email: req.body.email, age: req.body.age }
+    )
+    .then((result) => res.json(result))
+    .catch((err) => res.json(err));
+});
+
 app.get("/", (req, res) => {
   userModel
     .find({})

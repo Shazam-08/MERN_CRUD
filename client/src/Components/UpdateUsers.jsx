@@ -1,15 +1,20 @@
 import React from "react";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function UpdateUsers() {
+  const { id } = useParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [age, setAge] = useState();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const update = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3001/create", { name, email, age })
+      .post("http://localhost:3001/update/" + id, { name, email, age })
       .then((result) => {
         console.log(result);
         navigate("/");
@@ -17,18 +22,27 @@ function UpdateUsers() {
       .catch((err) => console.log(err));
   };
 
+  useEffect(() => {
+    axios.get("http://localhost:3001/getuser/" + id).then((result) => {
+      setName(result.data.name);
+      setEmail(result.data.email);
+      setAge(result.data.age);
+    });
+  }, []);
+
   return (
     <div>
       <div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={update}>
           <div>
-            <h1>Add User</h1>
+            <h1>Update User</h1>
           </div>
           <div>
             <label>Name:</label>
             <input
               type="text"
               placeholder="Enter Your Name"
+              value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
@@ -37,6 +51,7 @@ function UpdateUsers() {
             <input
               type="email"
               placeholder="Enter Your Email"
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
@@ -45,6 +60,7 @@ function UpdateUsers() {
             <input
               type="text"
               placeholder="Enter Your Age"
+              value={age}
               onChange={(e) => setAge(e.target.value)}
             />
           </div>
